@@ -1,22 +1,26 @@
 from NewsCrawler3.crawlers import *
+from NewsCrawler3.util import *
+from NewsCrawler3.text_extractor import text_extractor
+# for webclass in All.class_list:
 
-input = {
-    "Startup": "2021-01-18",
-    "Trends": "2021-01-19",
-    "Investment": "2021-01-06",
-    "Main": "2021-01-19",
-    "Business": "2021-01-19",
-    "Event": "2021-01-19",
-    "China": "2021-01-19",
-    "Blockchain": "2021-01-18",
-    "Marketing": "2021-01-11",
-    "Workinsight": "2020-12-30",
-    "Entrepreneur": "2021-01-12",
-    "Report": "2020-08-14",
-    "ALL TECH KOREA": "2019-12-14",
-    "Uncategorized": "2019-08-03",
-    "Greater China": "2015-01-21"}
+input_date ='2021-02-05'
+a = Venturesquare(input_date)
 
-a = Platum(input)
-for i in a.crawler():
-    print(i['day'], i['category'], i['title'], i['url'])
+meta = a.crawler()
+
+new_data = get_rid_of_outdated(meta, input_date)
+new_data.extend(new_data)
+#for i in new_data:
+#    print(i['day'], i['title'], i['corp'])
+
+print('*'*100)
+
+new_data = get_rid_of_duplicated(new_data)
+
+#for i in new_data:
+#    print(i['day'], i['title'])
+
+all_text = text_crawler(new_data)
+all_text.append({'text': 'what the'})
+for i in all_text:
+    print(i)

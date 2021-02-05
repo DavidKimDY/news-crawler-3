@@ -95,6 +95,7 @@ class Vrn(Website):
 
         for tt, da, ur, ti, th, ca in zip(title, day, url, time, thumb, category):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -156,6 +157,7 @@ class Besuccess(Website):
 
         for tt, da, ur, th, ca in zip(title, day, url, thumb, category):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -212,6 +214,7 @@ class Bikorea(Website):
 
         for tt, da, ur, th, ca in zip(title, day, url, thumb, category):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -281,6 +284,7 @@ class Bizwatch(Website):
 
         for tt, da, ur, th, ca, ti in zip(title, day, url, thumb, category, time):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['time'] = self.parse_title(ti)
@@ -348,6 +352,7 @@ class Hellodd(Website):
 
         for tt, da, ur, th, ca, ti in zip(title, day, url, thumb, category, time):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['time'] = self.parse_title(ti)
@@ -444,6 +449,7 @@ class Itchosun(Website):
 
         for tt, ur, th, tg in zip(title, url, thumb, tag):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['url'] = self.parse_url(ur)
             data['thumb'] = self.parse_thumb(th)
@@ -499,6 +505,7 @@ class Itdonga(Website):
 
         for tt, da, ur, th in zip(title, day, url, thumb):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -559,6 +566,7 @@ class Klnews(Website):
 
         for tt, da, ur, th, ca, ti in zip(title, day, url, thumb, category, time):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -635,6 +643,7 @@ class Sciencetimes(Website):
 
         for tt, ur, th, ca in zip(title, url, thumb, category):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['url'] = self.parse_url(ur)
             data['thumb'] = self.parse_thumb(th)
@@ -695,6 +704,7 @@ class Venturesquare(Website):
 
         for tt, da, ur, th, ca, ti in zip(title, day, url, thumb, category, time):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -709,7 +719,7 @@ class Venturesquare(Website):
 # Need to test!! (categorical)
 class Platum(Website):
 
-    def __init__(self, input_date_dict):
+    def __init__(self, input_date):
         
         self.base_page='https://platum.kr/{category}/page/{page_number}'
         self.corp='platum'
@@ -722,8 +732,7 @@ class Platum(Website):
             'event': 'Event', 'all-tech-korea': 'ALL TECH KOREA', 'report': 'Report',
             'blockchain': 'Blockchain', 'startup-3': 'Main'
         }
-        self.input_date_dict = input_date_dict
-
+        self.input_date = input_date
 
     def parse_title(self, _title):
         return _title.text
@@ -759,6 +768,7 @@ class Platum(Website):
 
         for tt, da, ur, th, ca in zip(title, day, url, thumb, category):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
@@ -771,7 +781,7 @@ class Platum(Website):
     def crawler(self):
         all_meta_data = []
         for cat in self.category:
-            input_date = self.input_date_dict[self.category_to_input[cat]]
+            input_date = self.input_date
             category_meta_data = self.crawler_by_category(cat, input_date)
             all_meta_data.extend(category_meta_data)
         return all_meta_data
@@ -779,15 +789,13 @@ class Platum(Website):
 
 # Need to test!! (categorical)
 class Clo(Website):
-    def __init__(self, input_date_dict):
+    def __init__(self, input_date):
         
-        self.base_page='http://clomag.co.kr/magazine?category={category}&page={page_number}'
-        self.category=['CAST', 'INSIGHT']
-        self.corp='CLO'
-
+        self.base_page = 'http://clomag.co.kr/magazine?category={category}&page={page_number}'
+        self.category = ['CAST', 'INSIGHT']
+        self.corp = 'CLO'
         self.CLO_THUMB = '/assets/article_sample-df281dcfbf04fe603f349f9cca65bea16660bc88ff86e733a4ccc53a9e3faf07.png'
-        self._category = {'CAST': 'CAST', 'INSIGHT': 'INSIGHT'}
-        self.input_date_dict = input_date_dict
+        self.input_date = input_date
 
     def parse_title(self, _title):
         title = _title.text
@@ -819,49 +827,61 @@ class Clo(Website):
         else:
             return 'http:' + thumb
 
-    def parse_category(self, _):
-        return self.current_category
-
-    def data_maker(self, soup):
+    def data_maker(self, soup, category):
         meta_data = []
 
         title = soup.select('.title')
         day = soup.select('.date')
         url = soup.select('.cover a')
         thumb = soup.select('.img-responsive')
-        category = soup.select('.cover a')
         tag = soup.select('.tags')
 
-        for tt, da, ur, th, ca, tg in zip(title, day, url, thumb, category, tag):
+        for tt, da, ur, th, tg in zip(title, day, url, thumb, tag):
             data = {}
+            data['corp'] = self.corp
             data['title'] = self.parse_title(tt)
             data['day'] = self.parse_day(da)
             data['url'] = self.parse_url(ur)
             data['thumb'] = self.parse_thumb(th)
-            data['category'] = self.parse_category(ca)
+            data['category'] = category
             data['tag'] = self.parse_tag(tg)
             meta_data.append(data)
 
         return meta_data
 
+    def crawler_by_category(self, category, input_date):
+        page_number = 1
+        category_meta_data = []
+        while True:
+            menu_url = self.base_page.format(page_number=page_number, category=category)
+            soup = get_soup(menu_url)
+            meta_data = self.data_maker(soup, category)
+            category_meta_data.extend(meta_data)
+            stop_sign = time_check(meta_data, input_date)
+            if stop_sign:
+                break
+            page_number += 1
+
+        return category_meta_data
+
     def crawler(self):
         all_meta_data = []
         for cat in self.category:
-            input_date = self.input_date_dict[self.category_to_input[cat]]
-            category_meta_data = self.crawler_by_category(cat, input_date)
+            category_meta_data = self.crawler_by_category(cat, self.input_date)
             all_meta_data.extend(category_meta_data)
         return all_meta_data
 
 # Need to test!! (categorical)
-class Ainews():
+class Ainews(Website):
 
-    def __init__(self):
+    def __init__(self, input_date):
         
         self.corp='인공지능신문'
         self.base_page='http://www.aitimes.kr/news/articleList.html?page={page_number}&total=971&sc_section_code=S1N{category}&sc_order_by=E&view_type=sm'
         self.page_head='http://www.aitimes.kr'
         self.category=[2, 3, 4, 5, 6]
         self._category = {2: 'AI Tech', 3: 'Focus', 4: 'AI Industry', 5: 'Today', 6: 'Opinion'}
+        self.input_date = input_date
 
     def parse_title(self, _title):
         title = _title.find('h4', {'class': 'titles'}).text.replace(u'\xa0', '')
@@ -877,17 +897,16 @@ class Ainews():
         thumb = self.page_head + '/news' + thumb
         return thumb
 
-    def parse_cat(self, _cat):
+    def parse_cat(self, _cat, category):
         cat = _cat.span.find_all('em')
         cat = cat[0].text
-        main_category = self._category[self.current_category]
+        main_category = self._category[category]
         return [main_category, cat]
 
-    def parse_day(self, _date):
-        date = _date.span.find_all('em')
-        print(date)
-        date = date[2].text.split()[0]
-        date = date.replace('.', '-')
+    def parse_day(self, url):
+        soup = get_soup(url)
+        date = soup.find('meta', {'property' : "article:published_time"}).attrs['content']
+        date = date.split('T')[0]
         return date
 
     def parse_time(self, _time):
@@ -895,108 +914,81 @@ class Ainews():
         time = time[2].text.split()[1]
         return time
 
-    def datadict(self, soup):
+    def data_maker(self, soup, category):
+        meta_data = []
         base = soup.find('section', {'id': 'section-list'}).find_all('li')
 
-        self._datadict['title'] = {'data': base, 'function': self.parse_title}
-        self._datadict['day'] = {'data': base, 'function': self.parse_day}
-        self._datadict['url'] = {'data': base, 'function': self.parse_url}
-        self._datadict['thumb'] = {'data': base, 'function': self.parse_thumb}
-        self._datadict['category'] = {'data': base, 'function': self.parse_cat}
-        self._datadict['time'] = {'data': base, 'function': self.parse_time}
+        for bs in base:
+            data = {}
+            data['corp'] = self.corp
+            data['title'] = self.parse_title(bs)
+            data['url'] = self.parse_url(bs)
+            data['day'] = self.parse_day(data['url'])
+            data['thumb'] = self.parse_thumb(bs)
+            data['category'] = self.parse_cat(bs, category)
+            meta_data.append(data)
 
-        return self._datadict
+        return meta_data
 
+    def crawler_by_category(self, category, input_date):
+        page_number = 1
+        category_meta_data = []
+        while True:
+            menu_url = self.base_page.format(page_number=page_number, category=category)
+            soup = get_soup(menu_url)
+            meta_data = self.data_maker(soup, category)
+            category_meta_data.extend(meta_data)
+            stop_sign = time_check(meta_data, input_date)
+            if stop_sign:
+                break
+            page_number += 1
 
-class Post():
+        return category_meta_data
 
-    def __init__(self):
-        self.corp=None
-        self.base_page=None
-        self.post = True
-        self.category = None
-
-    def crawler_(self):
-        data = []
-        obj = self.crawler_()
-        data.extend(obj)
-
-        return data
-
-    @classmethod
-    def is_stop(self, input_date, day):
-        if input_date == '':
-            with open(f'UpdateLog.json', 'r') as f:
-                updatelog = json.load(f)
-            input_date = updatelog[self.__name__]
-        input_date = datetime.strptime(input_date, '%Y-%m-%d')
-        day = datetime.strptime(day, '%Y-%m-%d')
-        if input_date > day:
-            return True
-        else:
-            return False
-
-    @classmethod
-    def get_text(cls, soup):
-        texts = soup.find_all('p')
-        _text = ''
-        for sent in texts:
-            _text += sent.text
-        for a in ['\n', u'\xa0', '\t', '\r', '  ']:
-            _text = _text.replace(a, '')
-        return _text
-
-    def bypassed_url(self, url, **kwargs):
-        with open('api_key.txt', 'r') as f:
-            api_key = f.read()
-        crawler_url = "https://crawler.roa.ai/html/requests/" + str(randrange(1, 6))
-        headers = {
-            "url": url,
-            "data": kwargs.get('data', None),
-            "api-key": api_key
-        }
-        return crawler_url, headers
+    def crawler(self):
+        all_meta_data = []
+        for cat in self.category:
+            category_meta_data = self.crawler_by_category(cat, self.input_date)
+            all_meta_data.extend(category_meta_data)
+        return all_meta_data
 
 
 # Need to test!! (Post)
-class Itnews(Post):
-    log = ['coredottoday', 'coredottoday2']
-    ID_PARAMS = {'log': log[1],
-                 'pwd': 'core.today',
-                 'redirect_to': '',
-                 'a': 'login',
-                 'rememberme': 'forever',
-                 'Submit': '로그인'}
+class Itnews(Website):
 
-    CORP = 'IT NEWS'
-    url = 'http://www.itnews.or.kr/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=8.0'
-    td_block_id = ['td_uid_2_5fbeeb6592823', 'td_uid_1_5f6d6002399b8']
-    params = {
-        'MIME Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'action': 'td_ajax_block',
-        'td_atts': {"limit": "5", "sort": "", "post_ids": "", "tag_slug": "", "autors_id": "",
-                    "installed_post_types": "", "category_id": "1162", "category_ids": "", "custom_title": "",
-                    "custom_url": "", "show_child_cat": 30, "sub_cat_ajax": "", "ajax_pagination": "next_prev",
-                    "header_color": "", "header_text_color": "", "ajax_pagination_infinite_stop": "",
-                    "td_column_number": 3, "td_ajax_preloading": "",
-                    "td_ajax_filter_type": "td_category_ids_filter",
-                    "td_ajax_filter_ids": "", "td_filter_default_txt": "All", "color_preset": "", "border_top": "",
-                    "class": "td_uid_1_5f6d6002399b8_rand", "el_class": "", "offset": "", "css": "", "tdc_css": "",
-                    "tdc_css_class": "td_uid_1_5f6d6002399b8_rand", "live_filter": "",
-                    "live_filter_cur_post_id": "",
-                    "live_filter_cur_post_author": "", "block_template_id": ""},
-        'td_block_id': td_block_id[0],
-        'td_column_number': 3,
-        'td_current_page': 2,
-        'block_type': 'td_block_mega_menu'
-    }
-    page_key = 'td_current_page'
+    def __init__(self, input_date):
+        self.input_date = input_date
+        self.log = ['coredottoday', 'coredottoday2']
+        self.ID_PARAMS = {'log': self.log[1],
+                     'pwd': 'core.today',
+                     'redirect_to': '',
+                     'a': 'login',
+                     'rememberme': 'forever',
+                     'Submit': '로그인'}
 
+        self.corp = 'IT NEWS'
+        self.url = 'http://www.itnews.or.kr/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=8.0'
+        td_block_id = ['td_uid_2_5fbeeb6592823', 'td_uid_1_5f6d6002399b8']
+        self.params = {
+            'MIME Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'action': 'td_ajax_block',
+            'td_atts': {"limit": "5", "category_id": "1162", "show_child_cat": 30,
+                        "ajax_pagination": "next_prev", "td_column_number": 3,
+                        "td_ajax_filter_type": "td_category_ids_filter",
+                        "td_filter_default_txt": "All",
+                        "class": "td_uid_1_5f6d6002399b8_rand",
+                        "tdc_css_class": "td_uid_1_5f6d6002399b8_rand"
+                        },
+            'td_block_id': td_block_id[0],
+            'td_column_number': 3,
+            'td_current_page': 2,
+            'block_type': 'td_block_mega_menu'
+        }
+        self.page_key = 'td_current_page'
 
-    @classmethod
-    def get_url_list(cls, page_num):
-        cls.params[cls.page_key] = page_num
-        soup = cls.post_soup(cls.url, cls.params)
+    def get_url_list(self, page_num):
+        self.params[self.page_key] = page_num
+        soup = post_soup(self.url, self.params)
         url_list = []
         divisnone = False
         while not divisnone:
@@ -1014,10 +1006,7 @@ class Itnews(Post):
 
         return url_list
 
-    @classmethod
-    def get_data(cls, url, soup):
-        cls.corp = cls.CORP
-        text = cls.get_text(soup)
+    def get_data(self, url, soup):
         title = soup.title.text
         try:
             thumb = soup.find('img', {'class': 'aligncenter'}).attrs['src']
@@ -1030,120 +1019,95 @@ class Itnews(Post):
             cat = soup.find('li', {'class': 'entry-category'}).text
         except:
             cat = ''
-        stop_sign = cls.is_stop(cls.input_date, day)
-        return [cls.corp, url, title, thumb, day, time, cat, text], stop_sign
+        return [self.corp, url, title, thumb, day, time, cat]
 
-    @classmethod
-    def crawler(cls):
+    def crawler(self):
         page_num = 1
         metadata_list = []
-        textdata_list = []
         while True:
-            urls = cls.get_url_list(page_num)
-            metadata, textdata, stop_sign = cls.__crawler(urls)
-            metadata_list.extend(metadata)
-            textdata_list.extend(textdata)
+            urls = self.get_url_list(page_num)
+            meta_data = self.__crawler(urls)
+            metadata_list.extend(meta_data)
+            stop_sign = time_check(meta_data, self.input_date)
             if stop_sign:
-                return metadata_list, textdata_list
-            else:
-                page_num += 1
+                return metadata_list
+            page_num += 1
 
-    @classmethod
-    def __crawler(cls, urls: list):
-
-        '''
-        :param urls: list
-        to scrape
-        :param ID_PARAMS: dict
-        dict. id and pw in order to log in
-        :param initial: bool
-        True: assumes there is no data. So need to save data into DB file
-        False : assumes there is data. So scrapes new urls only and returns data from new urls
-
-        :return:
-        list composed dict data about articles.
-        '''
-
+    def __crawler(self, urls: list):
         metadata = []
-        textdata = []
         for page in urls:
             bin = {}
-            bin2 = {}
-            soup = cls.post_soup(page, cls.ID_PARAMS)
-            data, stop_sign = cls.get_data(page, soup)
-            bin['self.corp'], bin['url'], bin['title'], bin['thumb'], bin['day'], bin['time'], bin['cat'], _ = data
-            _, bin2['url'], _, _, bin2['day'], _, _, bin2['text'] = data
+            soup = post_soup(page, self.ID_PARAMS)
+            data = self.get_data(page, soup)
+            bin['corp'], bin['url'], bin['title'], bin['thumb'], bin['day'], bin['time'], bin['category'] = data
             metadata.append(bin)
-            textdata.append(bin2)
-            if stop_sign:
-                return metadata, textdata, stop_sign
+            return metadata
 
-        return metadata, textdata, stop_sign
+        return metadata
 
 
 # Need to test!! (Post)
-class Mobiinside(Post):
-    BASE_PAGE = 'https://www.mobiinside.co.kr/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=9.7.4'
-    HOME_PAGE = 'https://www.mobiinside.co.kr'
-    CORP = '모바일 인사이드'
+class Mobiinside(Website):
 
-    page_key = 'td_current_page'
+    def __init__(self, input_date):
+        self.input_date = input_date
+        self.BASE_PAGE = 'https://www.mobiinside.co.kr/wp-admin/admin-ajax.php?td_theme_name=Newspaper&v=9.7.4'
+        self.HOME_PAGE = 'https://www.mobiinside.co.kr'
+        self.CORP = '모바일 인사이드'
 
-    obj = {'MIME Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-           'action': 'td_ajax_block',
-           'td_atts': {"category_id": "52",
-                       "limit": "100",
-                       "image_height": "65",
-                       "modules_on_row": "eyJhbGwiOiI1MCUiLCJwaG9uZSI6IjEwMCUifQ==",
-                       "modules_gap": "eyJhbGwiOiIxLjYlIiwicG9ydHJhaXQiOiIyJSJ9",
-                       "modules_category": "image",
-                       "show_btn": "none",
-                       "ajax_pagination": "next_prev",
-                       "show_cat": "none",
-                       "td_filter_default_txt": "All",
-                       "all_modules_space": "36",
-                       "modules_border_color": "#eaeaea",
-                       "modules_divider_color": "#eaeaea",
-                       "image_alignment": "50",
-                       "excerpt_col": "1",
-                       "art_audio_size": "1.5",
-                       "meta_info_border_color": "#eaeaea",
-                       "modules_category_radius": "0",
-                       "show_author": "inline-block",
-                       "show_date": "inline-block",
-                       "show_review": "inline-block",
-                       "show_com": "block",
-                       "show_excerpt": "block",
-                       "show_audio": "block",
-                       "f_header_font_title": "Block header",
-                       "f_ajax_font_title": "Ajax categories",
-                       "f_more_font_title": "Load more button",
-                       "f_title_font_title": "Article title",
-                       "f_cat_font_title": "Article category tag",
-                       "f_meta_font_title": "Article meta info",
-                       "f_ex_font_title": "Article excerpt",
-                       "f_btn_font_title": "Article read more button",
-                       "shadow_shadow_title": "Module Shadow",
-                       "shadow_m_shadow_title": "Meta info shadow",
-                       "td_column_number": 2,
-                       "class": "td_uid_8_5f6bf4f0786c6_rand",
-                       "tdc_css_class": "td_uid_8_5f6bf4f0786c6_rand",
-                       "tdc_css_class_style": "td_uid_8_5f6bf4f0786c6_rand_style"},
+        self.page_key = 'td_current_page'
 
-           "td_block_id": '',
-           "td_column_number": 2,
-           "td_current_page": 1,
-           "block_type": "td_flex_block_1",
-           "td_magic_token": ''
+        self.obj = {'MIME Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+               'action': 'td_ajax_block',
+               'td_atts': {"category_id": "52",
+                           "limit": "100",
+                           "image_height": "65",
+                           "modules_on_row": "eyJhbGwiOiI1MCUiLCJwaG9uZSI6IjEwMCUifQ==",
+                           "modules_gap": "eyJhbGwiOiIxLjYlIiwicG9ydHJhaXQiOiIyJSJ9",
+                           "modules_category": "image",
+                           "show_btn": "none",
+                           "ajax_pagination": "next_prev",
+                           "show_cat": "none",
+                           "td_filter_default_txt": "All",
+                           "all_modules_space": "36",
+                           "modules_border_color": "#eaeaea",
+                           "modules_divider_color": "#eaeaea",
+                           "image_alignment": "50",
+                           "excerpt_col": "1",
+                           "art_audio_size": "1.5",
+                           "meta_info_border_color": "#eaeaea",
+                           "modules_category_radius": "0",
+                           "show_author": "inline-block",
+                           "show_date": "inline-block",
+                           "show_review": "inline-block",
+                           "show_com": "block",
+                           "show_excerpt": "block",
+                           "show_audio": "block",
+                           "f_header_font_title": "Block header",
+                           "f_ajax_font_title": "Ajax categories",
+                           "f_more_font_title": "Load more button",
+                           "f_title_font_title": "Article title",
+                           "f_cat_font_title": "Article category tag",
+                           "f_meta_font_title": "Article meta info",
+                           "f_ex_font_title": "Article excerpt",
+                           "f_btn_font_title": "Article read more button",
+                           "shadow_shadow_title": "Module Shadow",
+                           "shadow_m_shadow_title": "Meta info shadow",
+                           "td_column_number": 2,
+                           "class": "td_uid_8_5f6bf4f0786c6_rand",
+                           "tdc_css_class": "td_uid_8_5f6bf4f0786c6_rand",
+                           "tdc_css_class_style": "td_uid_8_5f6bf4f0786c6_rand_style"},
 
-           }
+               "td_block_id": '',
+               "td_column_number": 2,
+               "td_current_page": 1,
+               "block_type": "td_flex_block_1",
+               "td_magic_token": ''
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15'}
+               }
 
-    @classmethod
-    def id_pw(cls):
-        response = requests.get(cls.HOME_PAGE)
+    def id_pw(self):
+        response = requests.get(self.HOME_PAGE)
         soup = bs(response.content, 'html.parser')
         td_block_id = soup.find('div', {'class': 'td_block_inner td-mc1-wrap'}).attrs['id']
         td_magic_token = ''
@@ -1153,61 +1117,59 @@ class Mobiinside(Post):
                     if 'tdBlockNonce' in e:
                         td_magic_token = e.split('=')[-1].replace('\"', '')
                         break
-        cls.obj['td_block_id'] = td_block_id
-        cls.obj['td_magic_token'] = td_magic_token
+        self.obj['td_block_id'] = td_block_id
+        self.obj['td_magic_token'] = td_magic_token
 
-    @classmethod
-    def parse_cat(cls, _cat):
+    def parse_cat(self, _cat):
         cat = _cat.attrs['href']
         cat = re.sub('.*category|/|\\\\', '', cat)
         return cat
 
-    @classmethod
-    def parse_thumb(cls, _thumb):
+    def parse_thumb(self, _thumb):
         thumb = _thumb.attrs['style']
         thumb = re.sub('.*\(|\)', '', thumb)
         thumb = thumb.replace('\\', '')
         return thumb
 
-    @classmethod
-    def parse_url(cls, _url):
+    def parse_url(self, _url):
         url = _url.next.attrs['href']
         url = url.replace('\\', '')
         return url
 
-    @classmethod
-    def parse_title(cls, _title):
+    def parse_title(self, _title):
         title = _title.attrs['title']
         return title
 
-    @classmethod
-    def parse_day_time(cls, _datetime):
+    def parse_day_time(self, _datetime):
         datetime = _datetime.attrs['datetime']
         day = datetime.split('T')[0]
         time = datetime.split('T')[1][:5]
         return day, time
 
-    @classmethod
-    def crawler(cls):
+    def crawler(self):
         page_num = 1
-        obj_list = []
-        cls.id_pw()
+        all_meta_data= []
+        self.id_pw()
         while True:
-            obj_list_by_pagenum, stop_sign = cls.__crawler(page_num)
-            obj_list.extend(obj_list_by_pagenum)
+            meta_data = self.__crawler(page_num)
+            all_meta_data.extend(meta_data)
+            stop_sign = time_check(meta_data, self.input_date)
             if stop_sign:
-                print(obj_list)
-                return obj_list
-            else:
-                page_num += 1
+                break
+            page_num += 1
 
-    @classmethod
-    def __crawler(cls, page_num):
-        cls.obj[cls.page_key] = page_num
-        my_obj = cls.obj
-        response = requests.post(cls.BASE_PAGE, data=my_obj, headers=cls.headers)
+        return all_meta_data
+
+    def __crawler(self, page_num):
+        self.obj[self.page_key] = page_num
+        my_obj = self.obj
+        headers = {
+        'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Safari/605.1.15'
+        }
+        response = requests.post(self.BASE_PAGE, data=my_obj, headers=headers)
         if response.status_code != 200:
-            print(f'Error<{cls.__name__}> : {response.status_code}')
+            print(f'Error<{self.__name__}> : {response.status_code}')
             raise ConnectionError
 
         page = response.text.encode('utf-8')
@@ -1220,17 +1182,17 @@ class Mobiinside(Post):
         thumbs = soup.find_all('span', {'class': 'entry-thumb'})
         cats = soup.find_all('a', {'class': 'td-post-category'})
 
-        obj_list = []
+        meta_data = []
 
         for _title, _url, _thumb, _cat, _datetime in zip(titles, urls, thumbs, cats, datetimes):
-            thumb = cls.parse_thumb(_thumb)
-            title = cls.parse_title(_title)
-            url = cls.parse_url(_url)
-            cat = cls.parse_cat(_cat)
-            day, time = cls.parse_day_time(_datetime)
+            thumb = self.parse_thumb(_thumb)
+            title = self.parse_title(_title)
+            url = self.parse_url(_url)
+            cat = self.parse_cat(_cat)
+            day, time = self.parse_day_time(_datetime)
 
-            obj_ = {
-                'self.corp': cls.CORP,
+            data = {
+                'corp': self.CORP,
                 'thumb': thumb,
                 'title': title,
                 'day': day,
@@ -1238,15 +1200,10 @@ class Mobiinside(Post):
                 'url': url,
                 'category': cat}
 
-            stop_sign = cls.is_stop(cls.input_date, day)
-            if stop_sign:
-                return obj_list, stop_sign
+            meta_data.append(data)
 
-            obj_list.append(obj_)
-
-        return obj_list, stop_sign
+        return meta_data
 
 
 class All:
-    class_list = [Ainews, Besuccess, Bikorea, Bizwatch, Clo, Hellodd, Itchosun, Itdonga, Klnews, Platum, Sciencetimes,
-                  Venturesquare, Vrn, Itnews, Mobiinside]
+    class_list = [Ainews, Besuccess, Bikorea, Bizwatch, Clo, Hellodd, Itchosun, Itdonga, Itnews, Klnews, Mobiinside, Platum, Sciencetimes, Venturesquare, Vrn]
