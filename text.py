@@ -22,5 +22,8 @@ new_data = get_rid_of_duplicated(new_data)
 
 all_text = text_crawler(new_data)
 all_text.append({'text': 'what the'})
+all_text = check_text_validity(all_text)
+
 for i in all_text:
     print(i)
+

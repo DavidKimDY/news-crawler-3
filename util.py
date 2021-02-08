@@ -148,7 +148,7 @@ def save_error_text(wrong_text, news_site):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(error_data, f, ensure_ascii=False, indent='\t')
 
-def check_text_validity(text_data):
+def check_text_validity(text_data, news_site):
     wrong_text = []
     for t in text_data:
         text = t['text']
@@ -156,5 +156,6 @@ def check_text_validity(text_data):
             wrong_text.append(t)
     for s in wrong_text:
         text_data.remove(s)
+    save_error_text(wrong_text, news_site)
     return text_data
 
