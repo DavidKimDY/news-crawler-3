@@ -5,7 +5,7 @@ from datetime import datetime
 import requests
 import asyncio
 from bs4 import BeautifulSoup as bs
-from NewsCrawler3.text_extractor import text_extractor
+from text_extractor import text_extractor
 
 
 def get_soup(url):

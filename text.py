@@ -1,6 +1,6 @@
-from NewsCrawler3.crawlers import *
-from NewsCrawler3.util import *
-from NewsCrawler3.text_extractor import text_extractor
+from crawlers import *
+from util import *
+from text_extractor import text_extractor
 # for webclass in All.class_list:
 
 input_date ='2021-02-05'

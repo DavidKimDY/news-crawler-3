@@ -94,6 +94,16 @@ def clo(soup):
         t += a.text
     return t
 
+def ai_times(soup):
+    t = ''
+    for i in soup.find('div', {'class': "article-body"}).find_all('p'):
+        t += i.text + ' '
+    return t
+
+def hellodd(soup):
+    return ai_times(soup)
+
+
 
 news_map = {
     '디지털데일리': digital_daily,
@@ -115,7 +125,8 @@ news_map = {
     '씨아이오넷': cio_net,
     '블로터': bloter,
     'IT CHOSUN': itchosun,
-    '벤처스퀘어': venture_sqr
+    '벤처스퀘어': venture_sqr,
+    '인공지능신문': ai_times
 }
 
 

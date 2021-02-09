@@ -8,7 +8,8 @@ from random import randrange
 import requests
 from bs4 import BeautifulSoup as bs
 
-from NewsCrawler3.util import *
+#from NewsCrawler3.util import *
+from util import *
 # from util import *
 
 class Website():

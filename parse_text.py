@@ -120,6 +120,7 @@ news_map = {
 
 
 def get_text(news, soup):
+    # news is corp value
     function = news_map[news]
     text = function(soup)
     return text
