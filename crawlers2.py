@@ -893,9 +893,11 @@ class Brainbox:
 
 
 class All:
-    class_list = [Aving, Betanews, Bloter, Boannews, BylineNetwork, Cionet, Cnet,
-                  Datanet, Datanews, Ddaily, Dailysecu, Kbench, Kinews,
-                  Koit, Nextdaily, Techholic, Techsuda, Brainbox]
+    class_list_from_DH = [
+        Aving, Betanews, Bloter, Boannews, BylineNetwork, Cionet, Cnet,
+        Datanet, Datanews, Ddaily, Dailysecu, Kbench, Kinews,
+        Koit, Nextdaily, Techholic, Techsuda, Brainbox
+    ]
 
 a = Brainbox("2021-02-02")
 a.crawler()
