@@ -1,4 +1,4 @@
-from crawlers import
+from crawlers import *
 from util import *
 from text_extractor import text_extractor
 # for webclass in All.class_list:
