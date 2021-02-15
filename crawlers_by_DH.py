@@ -31,7 +31,7 @@ class Aving:
                     thumb = article.find('img')['src']
                     day = article.find('span', class_='f_9_gray6').text
 
-                    if day > self.time_standard:
+                    if day >= self.time_standard:
                         result = {"corp": self.corp, "title": title, "thumb": thumb, "url": url, "day": day, "time": None,
                                   "category": key}
                         meta_data.append(result)
