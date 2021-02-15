@@ -1,6 +1,6 @@
 __pycache___/
-.DS_Store/
-.idea/
+.DS_Store
+.idea
 api_key.txt
 *.json
 !time_stamp.json
