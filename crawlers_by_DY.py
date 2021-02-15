@@ -1,16 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import string
-import json
-from datetime import datetime
-from random import randrange
-
-import requests
-from bs4 import BeautifulSoup as bs
-
-#from NewsCrawler3.util import *
 from util import *
-# from util import *
 
 class Website():
 
@@ -960,7 +951,7 @@ class Itnews(Website):
     def __init__(self, input_date):
         self.input_date = input_date
         self.log = ['coredottoday', 'coredottoday2']
-        self.ID_PARAMS = {'log': self.log[1],
+        self.post_data = {'log': self.log[1],
                      'pwd': 'core.today',
                      'redirect_to': '',
                      'a': 'login',
@@ -1038,7 +1029,7 @@ class Itnews(Website):
         metadata = []
         for page in urls:
             bin = {}
-            soup = post_soup(page, self.ID_PARAMS)
+            soup = post_soup(page, self.post_data)
             data = self.get_data(page, soup)
             bin['corp'], bin['url'], bin['title'], bin['thumb'], bin['day'], bin['time'], bin['category'] = data
             metadata.append(bin)

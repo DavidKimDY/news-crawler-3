@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 from bs4 import BeautifulSoup as bs
 from datetime import datetime, timedelta
@@ -28,7 +29,7 @@ class Aving:
                     title = article.find('div', class_='title').find('a').text
                     url = 'http://kr.aving.net' + article.find('div', class_='title').find('a')['href']
                     thumb = article.find('img')['src']
-                    day = article.find('span', class_='f_9_gray6')
+                    day = article.find('span', class_='f_9_gray6').text
 
                     if day > self.time_standard:
                         result = {"corp": self.corp, "title": title, "thumb": thumb, "url": url, "day": day, "time": None,
@@ -882,7 +883,6 @@ class Brainbox:
                             result = {"corp": self.corp, "thumb": thumb, "time": time, "title": title, "day": day,
                                       "url": url, "category": [top_key, key]}
                             meta_data.append(result)
-                            print(result)
 
                     if day < self.time_standard:
                         break
@@ -893,11 +893,8 @@ class Brainbox:
 
 
 class All:
-    class_list_from_DH = [
+    class_list = [
         Aving, Betanews, Bloter, Boannews, BylineNetwork, Cionet, Cnet,
         Datanet, Datanews, Ddaily, Dailysecu, Kbench, Kinews,
         Koit, Nextdaily, Techholic, Techsuda, Brainbox
     ]
-
-a = Brainbox("2021-02-02")
-a.crawler()

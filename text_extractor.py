@@ -44,7 +44,11 @@ def next_daily(soup):
 
 
 def bo_an_news(soup):
-    return soup.find('div', {'itemprop': "articleBody"}).text
+    text_soup = soup.find('div', {'itemprop': "articleBody"})
+    if text_soup is None:
+        return None
+    else:
+        return text_soup.text
 
 
 def aving(soup):
@@ -94,18 +98,73 @@ def clo(soup):
         t += a.text
     return t
 
+
 def ai_times(soup):
     t = ''
     for i in soup.find('div', {'class': "article-body"}).find_all('p'):
         t += i.text + ' '
     return t
 
+
 def hellodd(soup):
-    return ai_times(soup)
+    parsed = soup.find('div', {'class': "article-body"})
+    return parsed.article.text
 
 
+def besuccess(soup):
+    return soup.find('div', {'itemprop': "articleBody"}).text
+
+
+def sciencetimes(soup):
+    t = ''
+    for a in soup.find('div', {'class': "view_content"}).find_all('p'):
+        t += a.text
+    return t
+
+
+def klnews(soup):
+    return soup.find('article', {'itemprop': "articleBody"}).text
+
+
+def itnews(soup):
+    return soup.find('div', {'class': "td-post-content"}).text
+
+
+def bizwatch(soup):
+    return soup.find('div', {"itemprop": "articleBody"}).text
+
+
+def itdonga(soup):
+    t = ''
+    for i in soup.find('div', {'class': "article"}).find_all('p'):
+        t += i.text
+    return t
+
+
+def vrn(soup):
+    return soup.find('div', {"itemprop": "articleBody"}).text
+
+
+def bikorea(soup):
+    return soup.find('td',{'id' : "articleBody"}).text
+
+
+def platum(soup):
+    t = ''
+    for i in soup.find('div', {'class': "post_wrapper"}).find_all('p'):
+        t += i.text
+    return t
+
+
+def mobiinside(soup):
+    t = ''
+    for i in soup.find_all('p'):
+        t += i.text
+    return t
 
 news_map = {
+    # key value is corp value
+
     '디지털데일리': digital_daily,
     '데이터뉴스': data_news,
     '케이벤치': kbench,
@@ -126,7 +185,19 @@ news_map = {
     '블로터': bloter,
     'IT CHOSUN': itchosun,
     '벤처스퀘어': venture_sqr,
-    '인공지능신문': ai_times
+    '인공지능신문': ai_times,
+    '헬로디디': hellodd,
+    'CLO': clo,
+    'besuccess': besuccess,
+    'sciencetimes': sciencetimes,
+    '물류신문': klnews,
+    'IT NEWS': itnews,
+    'bizwatch': bizwatch,
+    'IT동아': itdonga,
+    'VRN': vrn,
+    'BI KOREA': bikorea,
+    'platum': platum,
+    '모바일 인사이드': mobiinside
 }
 
 

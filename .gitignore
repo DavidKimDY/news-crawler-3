@@ -1,4 +1,5 @@
 __pycache___/
+.DS_Store/
 data/
 .idea/
 api_key.txt
