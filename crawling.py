@@ -1,8 +1,8 @@
 from util import *
 from news_site_class_list import class_list
 
-input_date = input("Enter the date (ex 2021-01-01) or just hit the enter key : ")
-
+# input_date = input("Enter the date (ex 2021-01-01) or just hit the enter key : ")
+input_date = ''
 if input_date == '':
     with open('time_stamp.json', 'r') as f:
         time_stamp = json.load(f)
