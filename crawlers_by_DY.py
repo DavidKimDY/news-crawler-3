@@ -35,6 +35,65 @@ class Website():
 
         return category_meta_data
 
+class Irobot(Website):
+
+    def __init__(self, input_date):
+        self.corp = '로봇신문사'
+        self.page_head = 'http://www.irobotnews.com/news/'
+        self.base_page = 'http://www.irobotnews.com/news/articleList.html?page={page_number}&total=16078&sc_section_code=S1N1&sc_sub_section_code=&sc_serial_code=&sc_area=&sc_level=&sc_article_type=&sc_view_level=&sc_sdate=&sc_edate=&sc_serial_number=&sc_word=&sc_word2=&sc_andor=&sc_order_by=I&view_type=sm'
+        self.input_date = input_date
+
+    def parse_url(self, _url):
+        return self.page_head + str(_url).split('>')[0].split('\"')[1]
+
+    def parse_thumb(self, _thumb):
+        tags = str(_thumb.previous_sibling.previous_sibling)
+        if tags == 'None':
+            thumb = ''
+        else:
+            thumb = self.page_head + tags.split('\"')[3].strip('./')
+        return thumb
+
+    def parse_title(self, _title):
+        return _title.text
+
+    def parse_day(self, _day):
+        return _day.text
+
+    def parse_time(self, url):
+        url_site = requests.get(url)
+        time = bs(url_site.content, 'html.parser')
+        time = str(time.select('.View_Time')).split()[3].split('<')[0]
+        return time
+
+    def parse_cat(self, _cat):
+        return _cat.text
+
+    def data_maker(self, soup):
+
+        titles = soup.select('.ArtList_Title a ')
+        urls = soup.select('.ArtList_Title a ')
+        days = soup.select('.View_SmFont')
+        thumbnails = soup.select('.ArtList_Title')
+        categories = soup.select('.ArtList_Title .FontKor')
+
+        meta_data = []
+
+        for _title, _day, _thumb, _cat, _url in zip(titles, days, thumbnails, categories, urls):
+            data = {}
+            data['corp'] = self.corp
+            data['thumb'] = self.parse_thumb(_thumb)
+            data['title'] = self.parse_title(_title)
+            data['day'] = self.parse_day(_day)
+            data['url'] = self.parse_url(_url)
+            data['category'] = self.parse_cat(_cat)
+            data['time'] = self.parse_time(data['url'])
+
+            meta_data.append(data)
+
+        return meta_data
+
+
 # Tested
 class Vrn(Website):
 
@@ -43,7 +102,6 @@ class Vrn(Website):
         self.base_page = 'http://www.vrn.co.kr/news/articleList.html?page={page_number}&sc_order_by=E&view_type=sm'
         self.page_head = 'http://www.vrn.co.kr'
         self.input_date = input_date
-        self.meta_data = []
 
     def parse_title(self, _title):
         return _title.text
@@ -1198,4 +1256,4 @@ class Mobiinside(Website):
 
 
 class All:
-    class_list = [Ainews, Besuccess, Bikorea, Bizwatch, Clo, Hellodd, Itchosun, Itdonga, Itnews, Klnews, Mobiinside, Platum, Sciencetimes, Venturesquare, Vrn]
+    class_list = [Ainews, Besuccess, Bikorea, Bizwatch, Clo, Hellodd, Irobot, Itchosun, Itdonga, Itnews, Klnews, Mobiinside, Platum, Sciencetimes, Venturesquare, Vrn]
