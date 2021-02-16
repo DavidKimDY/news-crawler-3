@@ -162,6 +162,12 @@ def mobiinside(soup):
         t += i.text
     return t
 
+def irobot(soup):
+    t = ''
+    for i in soup.find_all('p'):
+        t += i.text
+    return t
+
 news_map = {
     # key value is corp value
 
@@ -197,7 +203,8 @@ news_map = {
     'VRN': vrn,
     'BI KOREA': bikorea,
     'platum': platum,
-    '모바일 인사이드': mobiinside
+    '모바일 인사이드': mobiinside,
+    '로봇신문사': irobot
 }
 
 

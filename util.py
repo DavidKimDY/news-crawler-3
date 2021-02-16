@@ -113,6 +113,7 @@ def text_crawler(metadata, post_data):
 
     return all_text
 
+
 def text_crawler_sync(metadata, post_data):
     text_data_list = []
     for meta in metadata:
@@ -229,10 +230,12 @@ def filter_wrong_text(text_data):
     return wrong_text, text_data
 
 
-def update_time_stamp(meta_data, time_stamp, news_site):
+def update_time_stamp(meta_data, news_site):
     if len(meta_data) == 0:
         return None
     latest_day = sorted([m['day'] for m in meta_data])[-1]
+    with open('time_stamp.json', 'r') as f:
+        time_stamp = json.load(f)
     time_stamp[news_site] = latest_day
     with open('time_stamp.json', 'w') as f:
         json.dump(time_stamp, f, indent='\t')

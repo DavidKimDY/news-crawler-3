@@ -1,4 +1,3 @@
-from datetime import datetime
 from util import *
 from news_site_class_list import class_list
 
@@ -38,4 +37,4 @@ for news_class in class_list:
     save_data(meta_data, news_site)
     save_data(text_data, news_site, text=True)
 
-    update_time_stamp(meta_data, time_stamp, news_site)
+    update_time_stamp(meta_data, news_site)
