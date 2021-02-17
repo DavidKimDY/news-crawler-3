@@ -34,7 +34,8 @@ for news_class in class_list:
     meta_data, text_data = filter_wrong_data(meta_data, text_data, news_site)  # len 20
 
 
-    save_data(meta_data, news_site)
-    save_data(text_data, news_site, text=True)
+    print(news_site, meta_data[0].get('time', None))
+    #save_data(meta_data, news_site)
+    #save_data(text_data, news_site, text=True)
 
-    update_time_stamp(meta_data, news_site)
+    #update_time_stamp(meta_data, news_site)
