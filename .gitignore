@@ -3,4 +3,6 @@ __pycache___
 .idea
 api_key.txt
 *.json
+*.zip
 !time_stamp.json
+Donghyo
